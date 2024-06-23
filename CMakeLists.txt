@@ -71,14 +71,18 @@ FetchContent_Declare(
     GIT_TAG v3.10.4
 )
 
-FetchContent_GetProperties(nlohmann_json)
-if(NOT nlohmann_json_POPULATED)
-    FetchContent_Populate(nlohmann_json)
-    add_subdirectory(${nlohmann_json_SOURCE_DIR} ${nlohmann_json_BINARY_DIR})
-endif()
+# #FetchContent_GetProperties(nlohmann_json)
+# #if(NOT nlohmann_json_POPULATED)
+# #    FetchContent_Populate(nlohmann_json)
+# #    add_subdirectory(${nlohmann_json_SOURCE_DIR} ${nlohmann_json_BINARY_DIR})
+# #endif()
 
-target_include_directories(faiss PUBLIC ${nlohmann_json_SOURCE_DIR}/include)
+# #target_include_directories(faiss PUBLIC ${nlohmann_json_SOURCE_DIR}/include)
+
+# # Install sudo apt-get install -y nlohmann-json3-dev
+find_package(nlohmann_json 3.10.4 REQUIRED)
+
+target_link_libraries(faiss PUBLIC nlohmann_json::nlohmann_json)
 
 find_package(ZLIB REQUIRED)
 target_link_libraries(faiss PUBLIC ${ZLIB_LIBRARIES})
-
