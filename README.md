@@ -8,6 +8,18 @@ This implementation of the ACORN index is built on [**The FAISS Library**](https
 
 If you run into any issues, please open an [issue](https://github.com/stanford-futuredata/ACORN/issues) and we'll respond promptly!
 
+## Quickstart
+```
+$ git clone https://github.com/AdeelAslamUnimore/ACORN/
+$ cd ACORN/
+$ sudo apt-get install -y nlohmann-json3-dev
+$ cmake -DFAISS_ENABLE_GPU=OFF -DFAISS_ENABLE_PYTHON=OFF -DBUILD_TESTING=ON -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -B build
+$ make -C build -j faiss
+$ cd build/tutorial/cpp
+$ make 1-Flat
+$ ./1-Flat
+```
+
 ## Installation
 ```
 git clone https://github.com/stanford-futuredata/ACORN.git
