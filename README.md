@@ -70,3 +70,72 @@ for (int xq = 0; xq < nq; xq++) {
 // perform efficient hybrid search
 acorn_gamma.search(nq, xq, k, dis2.data(), nns2.data(), filter_ids_map.data());
 ```
+##Example For HNSW (Luca.G)
+```
+/**
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+#include <faiss/IndexHNSW.h>
+#include <faiss/MetricType.h>
+#include<faiss/IndexACORN.h>
+#include <iostream>
+#include <vector>
+#include <random>
+
+
+int main(){
+    //Diemension of the vectors
+    int d=128;
+    // Number of database vectors
+    int nb=1000;
+    //Number of query vectors
+    int nq=10;
+    //Generate random database vectors
+    std::vector<float> xb (d*nb);
+    std::default_random_engine generator;
+    std::uniform_real_distribution<float> distribution(0.0,1.0);
+    for(int i=0; i<nb;i++){
+        for(int j=0;j<d;j++){
+            xb[d*i+j]=distribution(generator);
+        }
+        xb[d*i]+=i/1000.0;
+    }
+    std::vector<float> xq(d*nq);
+    for(int i=0;i<nq;i++){
+        for(int j=0;j<d;j++){
+            xq[d*i+j]=distribution(generator);
+        }
+        xq[d*i]+=i/1000.0;
+    }
+    int M=32;
+    faiss::IndexHNSWFlat index (d,M);
+    //add vectors to it
+    index.add(nb,xb.data());
+    // Top K
+    int k=5;
+    //Nearest Neighbour
+    std::vector<faiss::idx_t> indices(k*nq);
+    std::vector<float> distances(k*nq);
+    // Perform a search
+    //std::vector<float> xqq(d*nq,0.5);//Query vectors
+    index.search(nq,xq.data(),k,distances.data(),indices.data());
+    std::cout<<"indices:"<<std::endl;
+    for(int i=0;i<nq;++i){
+        for(int j=0;j<k;++j){
+            std::cout<<indices[i*k+j]<<" ";
+        }
+        std::cout<<std::endl;
+    }
+    std::cout << "Distance: "<< std::endl;
+    for(int i=0; i<nq;++i){
+        for(int j=0;j<k;++j){
+            std::cout<<distances[i*k+j]<<" ";
+        }
+        std::cout<<std::endl;
+    }
+    return 0;
+}
+```
